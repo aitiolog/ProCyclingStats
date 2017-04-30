@@ -46,11 +46,15 @@ rider['LastName'] = LastName
 
 # Rider date of birth (DOB)
 DOB_find = rider_main_bs.findAll(string=re.compile('Date of birth'))
-rider['DOB'] = \
+DOB_string = \
     DOB_find[0].parent.next_sibling.string \
     + DOB_find[0].parent.next_sibling.next_sibling.string \
     + DOB_find[0].parent.next_sibling.next_sibling.next_sibling.string
 
+DOB_string_split = DOB_string.split(' (')
+
+rider['DOB'] = DOB_string_split[0].lstrip()
+rider['Age'] = DOB_string_split[1][:-1]
 
 # Rider nationality
 Nationality_find = rider_main_bs.findAll(string=re.compile('Nationality'))
