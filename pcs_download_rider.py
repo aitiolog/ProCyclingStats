@@ -33,8 +33,18 @@ rider_main_page_soup = bs(rider_main_page.content, 'html.parser')
 
 #rider_overview_id
 
-rider_overview_DOB
-rider_overview_Nationality
+# Rider date of birth (DOB)
+DOB_find = rider_main_page_soup.findAll(string=re.compile('Date of birth'))
+rider_overview_DOB = \
+    DOB_find[0].parent.next_sibling.string \
+    + DOB_find[0].parent.next_sibling.next_sibling.string + ' ' \
+    + DOB_find[0].parent.next_sibling.next_sibling.next_sibling.string
+
+
+# Rider nationality
+Nationality_find = rider_main_page_soup.findAll(string=re.compile('Nationality'))
+rider_overview_Nationality = \
+    str(Nationality_find[0].parent.next_sibling.next_sibling.next_sibling.string)
 
 # Rider weight
 Weight_find = rider_main_page_soup.find_all(string=re.compile('Weight'))
@@ -42,12 +52,16 @@ rider_overview_Weight = \
     str(Weight_find[0].parent.next_sibling.string)
 rider_overview_Weight = float(rider_overview_Weight.split('kg', 1)[0])
 
+# Rider height
+Height_find = rider_main_page_soup.find_all(string=re.compile('Height'))
+rider_overview_Height = \
+    str(Height_find[0].parent.next_sibling.string)
+rider_overview_Height = float(rider_overview_Height.split('m', 1)[0])
 
-rider_overview_Height
-
-
-
-rider_overview_Team2017
+# Rider team
+Year_find = rider_main_page_soup.findAll(string=re.compile('2017'))
+rider_overview_Team2017 = \
+    str(Year_find[0].parent.next_sibling.next_sibling.string)
 
 # Points by speciality - One day races
 OneDayRaces_find = rider_main_page_soup.find_all(string=re.compile('One day races'))
@@ -64,3 +78,19 @@ rider_overview_TimeTrial = int(TimeTrial_find[0].parent.previous_sibling.string)
 # Points by speciality - Sprint
 Sprint_find = rider_main_page_soup.find_all(string=re.compile('Sprint'))
 rider_overview_Sprint = int(Sprint_find[0].parent.previous_sibling.string)
+
+
+
+#############################
+# Create rider dictionary
+rider = {}
+rider['DOB'] = rider_overview_DOB
+rider['Nationality'] = rider_overview_Nationality
+rider['Weight'] = rider_overview_Weight
+rider['Height'] = rider_overview_Height
+rider['Team2017'] = rider_overview_Team2017
+rider['Overview_OneDayRaces'] = rider_overview_OneDayRaces
+rider['Overview_GC'] = rider_overview_GC
+rider['Overview_TimeTrial'] = rider_overview_TimeTrial
+rider['Overview_Sprint'] = rider_overview_Sprint
+
