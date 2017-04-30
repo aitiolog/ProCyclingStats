@@ -38,12 +38,19 @@ rider_overview_Nationality
 rider_overview_Weight
 rider_overview_Height
 rider_overview_Team2017
-rider_overview_OneDayRaces
+
+# Points by speciality - One day races
+OneDayRaces_find = rider_main_page_soup.find_all(string=re.compile('One day races'))
+rider_overview_OneDayRaces = str(OneDayRaces_find[0].parent.previous_sibling.string)
 
 # Points by speciality - GC
-rider_overview_GC
+GC_find = rider_main_page_soup.find_all(string=re.compile('GC'))
+rider_overview_GC = str(GC_find[0].parent.previous_sibling.string)
 
+# Points by speciality - Time trial
+TimeTrial_find = rider_main_page_soup.find_all(string=re.compile('Time trial'))
+rider_overview_TimeTrial = str(TimeTrial_find[0].parent.previous_sibling.string)
 
-
-rider_overview_TimeTrial
-rider_overview_Sprint
+# Points by speciality - Sprint
+Sprint_find = rider_main_page_soup.find_all(string=re.compile('Sprint'))
+rider_overview_Sprint = str(Sprint_find[0].parent.previous_sibling.string)
