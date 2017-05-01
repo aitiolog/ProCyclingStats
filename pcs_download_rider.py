@@ -168,7 +168,8 @@ All_riders_list = [Froome_data, Roglic_data, Yates_data]
 # Convert list of dictionaries to pandas dataframe
 All_riders_df = pd.DataFrame(All_riders_list)
 
-
+# Save the dataframe to csv file
+All_riders_df.to_csv('All_Riders.csv')
 
 
 
