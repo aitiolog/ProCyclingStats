@@ -11,6 +11,7 @@ Author: Klemen Ziberna
 from bs4 import BeautifulSoup as bs
 import requests
 import re
+import pandas as pd
 
 
 
@@ -152,9 +153,50 @@ def pcs_rider_data(FirstName, LastName):
     #RETURN
     return merged_rider
     
+
+    
+
 ###############
 # MAIN PROGRAM
 
 Froome_data = pcs_rider_data('Christopher', 'Froome')
 Roglic_data = pcs_rider_data('Primoz', 'Roglic')
 Yates_data = pcs_rider_data('Simon', 'Yates')
+
+All_riders_list = [Froome_data, Roglic_data, Yates_data]
+
+# Convert list of dictionaries to pandas dataframe
+All_riders_df = pd.DataFrame(All_riders_list)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
