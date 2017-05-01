@@ -153,11 +153,30 @@ def pcs_rider_data(FirstName, LastName):
     #RETURN
     return merged_rider
     
-
+# Reorder dataframe columns
+def set_column_sequence(dataframe, seq, front=True):
+    '''Takes a dataframe and a subsequence of its columns,
+       returns dataframe with seq as first columns if "front" is True,
+       and seq as last columns if "front" is False.
+    '''
+    cols = seq[:] # copy so we don't mutate seq
+    for x in dataframe.columns:
+        if x not in cols:
+            if front: #we want "seq" to be in the front
+                #so append current column to the end of the list
+                cols.append(x)
+            else:
+                #we want "seq" to be last, so insert this
+                #column in the front of the new column list
+                #"cols" we are building:
+                cols.insert(0, x)
+    return dataframe[cols]
     
 
 ###############
 # MAIN PROGRAM
+
+# Obtain riders data
 
 Froome_data = pcs_rider_data('Christopher', 'Froome')
 Roglic_data = pcs_rider_data('Primoz', 'Roglic')
@@ -168,8 +187,24 @@ All_riders_list = [Froome_data, Roglic_data, Yates_data]
 # Convert list of dictionaries to pandas dataframe
 All_riders_df = pd.DataFrame(All_riders_list)
 
+
+# Reorder the dataframe - those columns first
+col_order = ['LastName',
+             'FirstName',
+             'Team2017',
+             'Age',
+             'Nationality',
+             'DOB',
+             'Height',
+             'Weight'           
+             ]
+
+ordered_All_riders_df = \
+    set_column_sequence(All_riders_df, col_order, front=True)
+
+
 # Save the dataframe to csv file
-All_riders_df.to_csv('All_Riders.csv')
+ordered_All_riders_df.to_csv('All_Riders.csv')
 
 
 
