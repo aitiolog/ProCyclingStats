@@ -44,10 +44,12 @@ def pcs_rider_data(url_rider_id):
     url_statistics = base_url + url_rider_id + '&c=3'
     
     rider_main_page = requests.get(url_overview)
-    rider_main_bs = bs(rider_main_page.content, 'html.parser')
-    
+    rider_main_bs = \
+        bs(rider_main_page.content.decode('utf-8', 'ignore'), 'html.parser')
+        
     rider_statistics_page = requests.get(url_statistics)
-    rider_statistics_bs = bs(rider_statistics_page.content, 'html.parser')
+    rider_statistics_bs = \
+        bs(rider_statistics_page.content.decode('utf-8', 'ignore'), 'html.parser')
     
     #print(rider_main_bs.prettify())
     
