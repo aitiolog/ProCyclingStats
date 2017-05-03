@@ -64,8 +64,11 @@ def pcs_rider_data(url_rider_id):
     riderName_find = rider_main_bs.findAll('h1')
     rider['Name'] = riderName_find[0].text.split('»',1)[0]
     rider['Name'] = ' '.join(rider['Name'].split())
-    rider['Name_ASCII'] = unidecode(rider['Name'])
-    
+    try:
+        rider['Name_ASCII'] = unidecode(rider['Name'])
+    except:
+        rider['Name_ASCII'] = 'Unidecode error'
+        
     # Rider PCS link
     rider['PCS_link'] = url_overview
     
