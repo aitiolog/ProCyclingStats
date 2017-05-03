@@ -13,7 +13,7 @@ import requests
 import re
 import pandas as pd
 
-
+from pcs_startlist import pcs_startlist_all_riders
 
 #####################################
 # FUNCTIONS
@@ -186,27 +186,38 @@ def set_column_sequence(dataframe, seq, front=True):
 ###############
 # MAIN PROGRAM
 
+# Obtain list of riders from startlist
+Giro2017_startlist_url = 'http://www.procyclingstats.com/race.php?id=171047&c=3&code=race-startlist'
+Giro2017_startlist_riders = pcs_startlist_all_riders(Giro2017_startlist_url)
+
+
 # Obtain riders data
+input_startlist_riders = Giro2017_startlist_riders
 
+All_riders_list = []
+counter = 1
 
-test_url_id = 'rider.php?id=140869'
-Froome_data = pcs_rider_data(test_url_id)
-
-All_riders_list = [Froome_data, Roglic_data, Yates_data]
+for item in input_startlist_riders:
+    print('Downloading data for: '+ item['Name'] + ' ('
+          + str(counter) + '/' + str(len(input_startlist_riders)) + ')')
+    rider_data = pcs_rider_data(item['Rider_Url'])
+    All_riders_list.append(rider_data)
+    counter = counter + 1
+    
 
 # Convert list of dictionaries to pandas dataframe
 All_riders_df = pd.DataFrame(All_riders_list)
 
 
 # Reorder the dataframe - those columns first
-col_order = ['LastName',
-             'FirstName',
+col_order = ['Name',
              'Team2017',
              'Age',
              'Nationality',
              'DOB',
              'Height',
-             'Weight'           
+             'Weight',
+             'PCS_link'
              ]
 
 ordered_All_riders_df = \
@@ -214,11 +225,8 @@ ordered_All_riders_df = \
 
 
 # Save the dataframe to csv file
+print('Saving the output table...')
 ordered_All_riders_df.to_csv('All_Riders.csv')
-
-
-
-
 
 
 
