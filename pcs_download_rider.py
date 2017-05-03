@@ -84,15 +84,22 @@ def pcs_rider_data(url_rider_id):
     
     # Rider weight
     Weight_find = rider_main_bs.find_all(string=re.compile('Weight'))
-    rider_overview_Weight = \
-        str(Weight_find[0].parent.next_sibling.string)
-    rider['Weight'] = float(rider_overview_Weight.split('kg', 1)[0])
+    try:
+        rider_overview_Weight = \
+            str(Weight_find[0].parent.next_sibling.string)
+        rider['Weight'] = float(rider_overview_Weight.split('kg', 1)[0])
+    except IndexError:
+        rider['Weight'] = 'NaN'
+        
     
     # Rider height
     Height_find = rider_main_bs.find_all(string=re.compile('Height'))
-    rider_overview_Height = \
-        str(Height_find[0].parent.next_sibling.string)
-    rider['Height'] = float(rider_overview_Height.split('m', 1)[0])
+    try:
+        rider_overview_Height = \
+            str(Height_find[0].parent.next_sibling.string)
+        rider['Height'] = float(rider_overview_Height.split('m', 1)[0])
+    except IndexError:
+        rider['Height'] = 'NaN'
     
     # Rider team
     Year_find = rider_main_bs.findAll(string=re.compile('2017'))
