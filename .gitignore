@@ -91,3 +91,9 @@ ENV/
 
 # Csv files
 *.csv
+
+# Analysis Tables
+Analysis_Tables/
+
+# Velogames
+Velogames/
