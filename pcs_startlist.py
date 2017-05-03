@@ -34,9 +34,6 @@ startlist_riders_find = startlist_bs.findAll("a", { "class" : "rider blue " })
 
 
 for index in range(0,len(startlist_riders_find)):
-    print(index)
-    #startlist_riders.append(startlist_riders_find[index].text)
-    #print(startlist_riders_find[index]['href'])
     startlist_riders.append({'Name': startlist_riders_find[index].text,
                              'Rider_Url': startlist_riders_find[index]['href']})
     
