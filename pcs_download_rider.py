@@ -103,8 +103,11 @@ def pcs_rider_data(url_rider_id):
     
     # Rider team
     Year_find = rider_main_bs.findAll(string=re.compile('2017'))
-    rider['Team2017'] = \
-        str(Year_find[0].parent.next_sibling.next_sibling.string)
+    try:
+        rider['Team2017'] = \
+            str(Year_find[0].parent.next_sibling.next_sibling.string)
+    except:
+        rider['Team2017'] = 'Error'
     
     # Points by speciality - One day races
     OneDayRaces_find = rider_main_bs.find_all(string=re.compile('One day races'))
