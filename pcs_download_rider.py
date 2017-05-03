@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup as bs
 import requests
 import re
 import pandas as pd
+from unidecode import unidecode
 
 from pcs_startlist import pcs_startlist_all_riders
 
@@ -63,6 +64,7 @@ def pcs_rider_data(url_rider_id):
     riderName_find = rider_main_bs.findAll('h1')
     rider['Name'] = riderName_find[0].text.split('»',1)[0]
     rider['Name'] = ' '.join(rider['Name'].split())
+    rider['Name_ASCII'] = unidecode(rider['Name'])
     
     # Rider PCS link
     rider['PCS_link'] = url_overview
@@ -223,6 +225,7 @@ All_riders_df = pd.DataFrame(All_riders_list)
 
 # Reorder the dataframe - those columns first
 col_order = ['Name',
+             'Name_ASCII',
              'Team2017',
              'Age',
              'Nationality',
