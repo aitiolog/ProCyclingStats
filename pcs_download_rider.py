@@ -18,7 +18,7 @@ import pandas as pd
 #####################################
 # FUNCTIONS
 
-def pcs_rider_data(FirstName, LastName):
+def pcs_rider_data(url_rider_id):
     "Returns a dictionary of the data obtained from the PCS pages"
     
     # Libraries
@@ -33,11 +33,15 @@ def pcs_rider_data(FirstName, LastName):
     #url_overview = 'http://www.procyclingstats.com/rider/Christopher_Froome'
     #url_statistics = 'http://www.procyclingstats.com/rider/Christopher_Froome_Statistics'
     #url_running_pts_score = 'http://www.procyclingstats.com/rider.php?id=140869&c=3&code=riderstats-general-running-point-score'
+    #url_rider_id = 'rider.php?id=140869'
     
     base_url = 'http://www.procyclingstats.com/'
-    url_overview = base_url + 'rider/' + FirstName + '_' + LastName
-    url_statistics = base_url + 'rider/' + FirstName + '_' + LastName + '_Statistics'
     
+    #url_overview = base_url + 'rider/' + FirstName + '_' + LastName
+    #url_statistics = base_url + 'rider/' + FirstName + '_' + LastName + '_Statistics'
+    
+    url_overview = base_url + url_rider_id
+    url_statistics = base_url + url_rider_id + '&c=3'
     
     rider_main_page = requests.get(url_overview)
     rider_main_bs = bs(rider_main_page.content, 'html.parser')
@@ -52,8 +56,14 @@ def pcs_rider_data(FirstName, LastName):
     rider = {}
     
     # Rider name
-    rider['FirstName'] = FirstName
-    rider['LastName'] = LastName
+    #rider['FirstName'] = FirstName
+    #rider['LastName'] = LastName
+    riderName_find = rider_main_bs.findAll('h1')
+    rider['Name'] = riderName_find[0].text.split('»',1)[0]
+    rider['Name'] = ' '.join(rider['Name'].split())
+    
+    # Rider PCS link
+    rider['PCS_link'] = url_overview
     
     # Rider date of birth (DOB)
     DOB_find = rider_main_bs.findAll(string=re.compile('Date of birth'))
@@ -178,9 +188,9 @@ def set_column_sequence(dataframe, seq, front=True):
 
 # Obtain riders data
 
-Froome_data = pcs_rider_data('Christopher', 'Froome')
-Roglic_data = pcs_rider_data('Primoz', 'Roglic')
-Yates_data = pcs_rider_data('Simon', 'Yates')
+
+test_url_id = 'rider.php?id=140869'
+Froome_data = pcs_rider_data(test_url_id)
 
 All_riders_list = [Froome_data, Roglic_data, Yates_data]
 

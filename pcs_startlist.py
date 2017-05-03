@@ -15,8 +15,7 @@ URL_STARTLIST = 'http://www.procyclingstats.com/race.php?id=171047&c=3&code=race
     
 from bs4 import BeautifulSoup as bs
 import requests
-import re
-import pandas as pd
+
 
 #####################################
 # MAIN PROGRAM
