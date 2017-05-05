@@ -67,7 +67,7 @@ sel_category = 'PCS Ranking - Individual - Value'
 #sel_category = 'PCS Season - Distance - Position'
 #sel_category = 'Form_2month''
 
-max_cost = 50 # max cost
+max_cost = 100 # max cost
 best_combination = {'Value':0,
                     'Combination': "",
                     'Cost': 0} 
@@ -76,50 +76,56 @@ best_combination = {'Value':0,
 # Main loop
 
 for index1 in range(0,len(rider1_df)):
+    print('Rider1: ' + str(index1))
     current_cost = rider1_df['Cost'][index1]
-    if current_cost > max_cost:
+    if current_cost > max_cost - 8*4:
         continue
 
     
     for index2 in range(0,len(rider2_df)):
+        print('-Rider2: ' + str(index2))
         current_cost = rider1_df['Cost'][index1] \
                     + rider2_df['Cost'][index2]                       
 
-        if current_cost > max_cost:
+        if current_cost > max_cost - 7*4:
             continue
 
         
         for index3 in range(0,len(rider3_df)):
+            print('--Rider3: ' + str(index3))
             current_cost = rider1_df['Cost'][index1] \
                         + rider2_df['Cost'][index2] \
                         + rider3_df['Cost'][index3]
             
-            if current_cost > max_cost:
+            if current_cost > max_cost - 6*4:
                 continue
             
             
             for index4 in range(0,len(rider4_df)):
+                print('---Rider4: ' + str(index4))
                 current_cost = rider1_df['Cost'][index1] \
                             + rider2_df['Cost'][index2] \
                             + rider3_df['Cost'][index3] \
                             + rider4_df['Cost'][index4] 
                 
-                if current_cost > max_cost:
+                if current_cost > max_cost - 5*4:
                     continue
                 
                 
                 for index5 in range(0,len(rider5_df)):
+                    print('----Rider5: ' + str(index5))
                     current_cost = rider1_df['Cost'][index1] \
                                 + rider2_df['Cost'][index2] \
                                 + rider3_df['Cost'][index3] \
                                 + rider4_df['Cost'][index4] \
                                 + rider5_df['Cost'][index5] 
                     
-                    if current_cost > max_cost:
+                    if current_cost > max_cost - 4*4:
                         continue
                 
                 
                     for index6 in range(0,len(rider6_df)):
+                        print('-----Rider6: ' + str(index6))
                         current_cost = rider1_df['Cost'][index1] \
                                     + rider2_df['Cost'][index2] \
                                     + rider3_df['Cost'][index3] \
@@ -127,7 +133,7 @@ for index1 in range(0,len(rider1_df)):
                                     + rider5_df['Cost'][index5] \
                                     + rider6_df['Cost'][index6] 
                         
-                        if current_cost > max_cost:
+                        if current_cost > max_cost - 3*4:
                             continue
                     
                         
@@ -140,7 +146,7 @@ for index1 in range(0,len(rider1_df)):
                                         + rider6_df['Cost'][index6] \
                                         + rider7_df['Cost'][index7] 
                             
-                            if current_cost > max_cost:
+                            if current_cost > max_cost - 2*4:
                                 continue
                             
                             
@@ -154,7 +160,7 @@ for index1 in range(0,len(rider1_df)):
                                             + rider7_df['Cost'][index7] \
                                             + rider8_df['Cost'][index8] 
                                 
-                                if current_cost > max_cost:
+                                if current_cost > max_cost - 1*4:
                                     continue
                                 
                                 
