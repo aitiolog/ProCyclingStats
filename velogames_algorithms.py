@@ -65,7 +65,7 @@ rider9_df = open_csv_chardet(os.path.join(FILE_PATH, CSV_FILES[8]))
 # Conditions
 sel_category = 'PCS Ranking - Individual - Value'
 #sel_category = 'PCS Season - Distance - Position'
-#sel_category = 'Form_2month''
+#sel_category = 'Form_2month'
 
 max_cost = 100 # max cost
 best_combination = {'Value':0,
