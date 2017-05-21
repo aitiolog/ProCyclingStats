@@ -33,6 +33,7 @@ import requests
 import re
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 #####################################
 # FUNCTIONS
@@ -96,8 +97,23 @@ stage_scores.to_csv('stage_scores.csv')
 cum_scores.to_csv('cum_scores.csv')
 
 
+# Plot figures
+Giro_last_stage = 14
+
+stage_scores[0:Giro_last_stage].plot(linestyle=':', marker='o', grid=1)
+plt.xlim(0,Giro_last_stage)
+plt.title('Stage scores')
+plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
+plt.ylabel('Points')
+plt.xlabel('Stage')
 
 
+cum_scores[0:Giro_last_stage].plot(linestyle='-', marker='|', grid=1)
+plt.xlim(0,Giro_last_stage)
+plt.title('Cumulative scores')
+plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1)
+plt.ylabel('Points')
+plt.xlabel('Stage')
 
 
 
