@@ -78,6 +78,7 @@ for item in Teams_dict_url:
     
     team_dict_out['Stage_Score'] = stage_score_list
     team_dict_out['Cumulative_Score'] = np.cumsum(stage_score_list).tolist()
+    team_dict_out['Stage_N'] = list(range(1,Giro_N_stages+1))
     
     result_list.append(team_dict_out)
 
