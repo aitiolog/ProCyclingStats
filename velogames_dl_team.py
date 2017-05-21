@@ -52,9 +52,37 @@ def get_stage_score(main_page_url, team_id, stage_N):
     
     return int(stage_score)
     
+
+def get_team_riders(main_page_url, team_id):
+        
+    # Load page
+    team_url = main_page_url + "?" + team_id
+    team_page = requests.get(team_url)
+    team_page_bs = \
+        bs(team_page.content.decode('utf-8', 'ignore'), 'html.parser')
     
+    # Find riders' names
+    team_riders_find = \
+        team_page_bs.findAll('a', href = re.compile('riderprofile.php?'))
+    
+    team_riders = []
+    for item in team_riders_find:
+        team_riders.append(item.text)
+    
+    return team_riders
+
+
 #####################################
 # MAIN PROGRAM
+
+# Dowload a list of riders for every team
+
+team_riders = {}
+
+for item in Teams_dict_url:
+    print('Dowloading riders for: ' + item)
+    team_riders[item] = get_team_riders(BASE_URL, Teams_dict_url[item])
+    
 
 # Download scores
 
@@ -82,8 +110,12 @@ for item in Teams_dict_url:
     
     result_list.append(team_dict_out)
 
+    
+
 
 # Create outputs
+team_riders_df = pd.DataFrame(team_riders)
+
 result_list_df = pd.DataFrame(result_list)
 
 stage_scores = result_list_df['Stage_Score'].apply(pd.Series).transpose()
@@ -103,6 +135,7 @@ winners_df['Stage_Score_Leader_Pts'] = cum_scores.max(axis=1)
 
 
 # Save to csv file
+team_riders_df.to_csv('team_riders.csv')
 stage_scores.to_csv('stage_scores.csv')
 cum_scores.to_csv('cum_scores.csv')
 winners_df.to_csv('winners.csv')
@@ -111,7 +144,7 @@ winners_df.to_csv('winners.csv')
 # Plot figures
 Giro_last_stage = 14
 
-stage_scores[0:Giro_last_stage].plot(linestyle=':', marker='D', grid=1)
+stage_scores[0:Giro_last_stage].plot(linestyle='None', marker='o', grid=1)
 plt.xlim(-1,Giro_last_stage)
 plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
 plt.title('Giro 2017: Individual stage scores')
@@ -128,7 +161,6 @@ plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('cum_scores.png', bbox_inches='tight')
-
 
 
 
