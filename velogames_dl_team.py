@@ -72,6 +72,25 @@ def get_team_riders(main_page_url, team_id):
     return team_riders
 
 
+# Reorder dataframe columns
+def set_column_sequence(dataframe, seq, front=True):
+    '''Takes a dataframe and a subsequence of its columns,
+       returns dataframe with seq as first columns if "front" is True,
+       and seq as last columns if "front" is False.
+    '''
+    cols = seq[:] # copy so we don't mutate seq
+    for x in dataframe.columns:
+        if x not in cols:
+            if front: #we want "seq" to be in the front
+                #so append current column to the end of the list
+                cols.append(x)
+            else:
+                #we want "seq" to be last, so insert this
+                #column in the front of the new column list
+                #"cols" we are building:
+                cols.insert(0, x)
+    return dataframe[cols]
+    
 #####################################
 # MAIN PROGRAM
 
@@ -111,19 +130,29 @@ for item in Teams_dict_url:
     result_list.append(team_dict_out)
 
     
-
+# Column order
+col_order = ['Pip',
+             'James',
+             'Peter',
+             'Andy',
+             'Toby',
+             'Parag',
+             'Klemen']
+    
 
 # Create outputs
 team_riders_df = pd.DataFrame(team_riders)
+team_riders_df = set_column_sequence(team_riders_df, col_order, front=True)
 
 result_list_df = pd.DataFrame(result_list)
 
 stage_scores = result_list_df['Stage_Score'].apply(pd.Series).transpose()
 stage_scores.columns = result_list_df['Name']
+stage_scores = set_column_sequence(stage_scores, col_order, front=True)
 
 cum_scores = result_list_df['Cumulative_Score'].apply(pd.Series).transpose()
 cum_scores.columns = result_list_df['Name']
-
+cum_scores = set_column_sequence(cum_scores, col_order, front=True)
 
 # Stage winners and overall leaders
 winners_df = pd.DataFrame()
@@ -144,6 +173,7 @@ winners_df.to_csv('winners.csv')
 # Plot figures
 Giro_last_stage = 14
 
+# Individual stage score plot
 stage_scores[0:Giro_last_stage].plot(linestyle='None', marker='o', grid=1)
 plt.xlim(-1,Giro_last_stage)
 plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
@@ -153,6 +183,7 @@ plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('stage_scores.png', bbox_inches='tight')
 
+# Cumulative stage score plot
 cum_scores[0:Giro_last_stage].plot(linestyle='-', marker='|', grid=1)
 plt.xlim(0,Giro_last_stage-1)
 plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
@@ -162,15 +193,58 @@ plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('cum_scores.png', bbox_inches='tight')
 
+##########################
+# Analysis
+
+team_PCS_scores = pd.DataFrame()
+team_PCS_scores['Teams'] = col_order
+team_PCS_scores['PCS_Overall'] = [5196, 5884, 6417, 6879, 5851, 5105, 7290] 
+team_PCS_scores['PCS_Season'] = [1994, 1966, 2169, 2424, 2678, 2478, 3706]
+
+# Correlation plots
+
+Giro_last_stage = 14
+
+# 1. Cumulative score vs PCS Overall points
+
+for i in range(0,Giro_last_stage):
+    print(i)
+    plt.figure()
+    x_data = team_PCS_scores['PCS_Overall'].tolist()
+    y_data = cum_scores.values.tolist()[i]
+    
+    pearR = np.corrcoef(x_data,y_data)[1,0]
+    fit = np.polyfit(x_data, y_data, 1)
+    fit_fn = np.poly1d(fit) 
+    
+    plt.scatter(x_data, y_data)
+    plt.plot(x_data, fit_fn(x_data), 'r')
+    plt.title('Giro 2017 - After Stage ' + str(i+1))
+    plt.ylabel('Velogames Points')
+    plt.xlabel('PCS Overall Points')
+    file_name = 'cum_scores_PCS_Overall_corr_st' + str(i+1).zfill(2) + '.png'
+    plt.savefig(file_name)
 
 
+# 2. Cumulative score vs PCS Season points
 
-
-
-
-
-
-
+for i in range(0,Giro_last_stage):
+    print(i)
+    plt.figure()
+    x_data = team_PCS_scores['PCS_Season'].tolist()
+    y_data = cum_scores.values.tolist()[i]
+    
+    pearR = np.corrcoef(x_data,y_data)[1,0]
+    fit = np.polyfit(x_data, y_data, 1)
+    fit_fn = np.poly1d(fit) 
+    
+    plt.scatter(x_data, y_data)
+    plt.plot(x_data, fit_fn(x_data), 'r')
+    plt.title('Giro 2017 - After Stage ' + str(i+1))
+    plt.ylabel('Velogames Points')
+    plt.xlabel('PCS Season Points')
+    file_name = 'cum_scores_PCS_Season_corr_st' + str(i+1).zfill(2) + '.png'
+    plt.savefig(file_name)
 
 
 
