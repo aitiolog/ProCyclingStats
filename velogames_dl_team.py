@@ -101,20 +101,23 @@ cum_scores.to_csv('cum_scores.csv')
 # Plot figures
 Giro_last_stage = 14
 
-stage_scores[0:Giro_last_stage].plot(linestyle=':', marker='o', grid=1)
+stage_scores[0:Giro_last_stage].plot(linestyle=':', marker='D', grid=1)
 plt.xlim(0,Giro_last_stage)
-plt.title('Stage scores')
+plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
+plt.title('Giro 2017: Stage scores')
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
-
+plt.savefig('stage_scores.png', bbox_inches='tight')
 
 cum_scores[0:Giro_last_stage].plot(linestyle='-', marker='|', grid=1)
 plt.xlim(0,Giro_last_stage)
-plt.title('Cumulative scores')
-plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1)
+plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
+plt.title('Giro 2017: Cumulative scores')
+plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
+plt.savefig('cum_scores.png', bbox_inches='tight')
 
 
 
