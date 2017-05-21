@@ -93,36 +93,41 @@ cum_scores = result_list_df['Cumulative_Score'].apply(pd.Series).transpose()
 cum_scores.columns = result_list_df['Name']
 
 
+# Stage winners and overall leaders
+winners_df = pd.DataFrame()
+winners_df['Stage_N'] = list(range(1,Giro_N_stages+1))
+winners_df['Stage_Score_Winner'] = stage_scores.idxmax(axis=1)
+winners_df['Stage_Score_Winner_Pts'] = stage_scores.max(axis=1)
+winners_df['Overall_Score_Leader'] = cum_scores.idxmax(axis=1)
+winners_df['Stage_Score_Leader_Pts'] = cum_scores.max(axis=1)
+
+
 # Save to csv file
 stage_scores.to_csv('stage_scores.csv')
 cum_scores.to_csv('cum_scores.csv')
+winners_df.to_csv('winners.csv')
 
 
 # Plot figures
 Giro_last_stage = 14
 
 stage_scores[0:Giro_last_stage].plot(linestyle=':', marker='D', grid=1)
-plt.xlim(0,Giro_last_stage)
+plt.xlim(-1,Giro_last_stage)
 plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
-plt.title('Giro 2017: Stage scores')
+plt.title('Giro 2017: Individual stage scores')
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('stage_scores.png', bbox_inches='tight')
 
 cum_scores[0:Giro_last_stage].plot(linestyle='-', marker='|', grid=1)
-plt.xlim(0,Giro_last_stage)
+plt.xlim(0,Giro_last_stage-1)
 plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
 plt.title('Giro 2017: Cumulative scores')
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('cum_scores.png', bbox_inches='tight')
-
-
-
-
-
 
 
 
