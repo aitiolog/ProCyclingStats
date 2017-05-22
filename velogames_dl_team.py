@@ -24,7 +24,18 @@ Teams_dict_url = {
                   'Pip': 'tid=590b9e73d6bf2899'
                   }
 
+Bot_Teams_dict_url = {
+                  'Klemen': 'tid=590be698bbe75142',
+                  'Bot - PCS Overall': 'tid=590bdbcb1c295217',
+                  'Bot - PCS Season': 'tid=590bdf777e546805',
+                  'Bot - PCS 2m form': 'tid=590be122d14aa341',
+                  'Random bot 1': 'tid=590c0507ad029444',
+                  'Random bot 2': 'tid=590c06c5ded3f251',
+                  'Random bot 3': 'tid=590c08bc3c90a334'
+                  }
 
+                  
+                  
 #####################################
 # LIBRARIES
 
@@ -171,7 +182,7 @@ winners_df.to_csv('winners.csv')
 
 
 # Plot figures
-Giro_last_stage = 14
+Giro_last_stage = 15
 
 # Individual stage score plot
 stage_scores[0:Giro_last_stage].plot(linestyle='None', marker='o', grid=1)
@@ -203,7 +214,7 @@ team_PCS_scores['PCS_Season'] = [1994, 1966, 2169, 2424, 2678, 2478, 3706]
 
 # Correlation plots
 
-Giro_last_stage = 14
+Giro_last_stage = 15
 
 # 1. Cumulative score vs PCS Overall points
 
@@ -246,6 +257,71 @@ for i in range(0,Giro_last_stage):
     file_name = 'cum_scores_PCS_Season_corr_st' + str(i+1).zfill(2) + '.png'
     plt.savefig(file_name)
 
+
+####################
+# Subplot versions
+
+# 1. Cumulative score vs PCS Overall points
+
+figure1 = plt.figure(figsize=(21,8))
+
+for i in range(0,Giro_last_stage):
+    print(i)
+    plot = plt.subplot(3,5,i+1)
+    x_data = team_PCS_scores['PCS_Overall'].tolist()
+    y_data = cum_scores.values.tolist()[i]
+    
+    pearR = np.corrcoef(x_data,y_data)[1,0]
+    fit = np.polyfit(x_data, y_data, 1)
+    fit_fn = np.poly1d(fit) 
+    
+    plt.scatter(x_data, y_data)
+    plt.plot(x_data, fit_fn(x_data), 'r')
+    
+    plot.tick_params(axis='both', which='major', labelsize=8)
+    plot.locator_params(axis='y', nbins=5)
+    plot.locator_params(axis='x', nbins=5)
+    
+    plt.title('Giro 2017 - After Stage ' + str(i+1), fontsize=12)
+    plt.ylabel('Velogames Points', fontsize=10)
+    plt.xlabel('PCS Overall Points', fontsize=10)
+    
+figure1.suptitle('Correlation of Velogames Points and PCS Overall Points', fontsize=14)
+figure1.subplots_adjust(hspace=0.5, wspace=0.4)    
+
+plt.savefig('cum_scores_PCS_Overall_correlation.png', bbox_inches='tight')
+
+
+
+# 2. Cumulative score vs PCS Season points
+
+figure2 = plt.figure(figsize=(21,8))
+
+for i in range(0,Giro_last_stage):
+    print(i)
+    plot = plt.subplot(3,5,i+1)
+    x_data = team_PCS_scores['PCS_Season'].tolist()
+    y_data = cum_scores.values.tolist()[i]
+    
+    pearR = np.corrcoef(x_data,y_data)[1,0]
+    fit = np.polyfit(x_data, y_data, 1)
+    fit_fn = np.poly1d(fit) 
+    
+    plt.scatter(x_data, y_data)
+    plt.plot(x_data, fit_fn(x_data), 'r')
+    
+    plot.tick_params(axis='both', which='major', labelsize=8)
+    plot.locator_params(axis='y', nbins=5)
+    #plot.locator_params(axis='x', nbins=4)
+    
+    plt.title('Giro 2017 - After Stage ' + str(i+1), fontsize=12)
+    plt.ylabel('Velogames Points', fontsize=10)
+    plt.xlabel('PCS Season Points', fontsize=10)
+    
+figure2.suptitle('Correlation of Velogames Points and PCS Season Points', fontsize=14)
+figure2.subplots_adjust(hspace=0.5, wspace=0.4)    
+
+plt.savefig('cum_scores_PCS_Season_correlation.png', bbox_inches='tight')
 
 
 
