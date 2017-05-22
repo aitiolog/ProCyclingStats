@@ -112,6 +112,12 @@ team_riders = {}
 for item in Teams_dict_url:
     print('Dowloading riders for: ' + item)
     team_riders[item] = get_team_riders(BASE_URL, Teams_dict_url[item])
+
+bot_team_riders = {}
+
+for item in Bot_Teams_dict_url:
+    print('Dowloading riders for: ' + item)
+    bot_team_riders[item] = get_team_riders(BASE_URL, Bot_Teams_dict_url[item])
     
 
 # Download scores
@@ -140,6 +146,27 @@ for item in Teams_dict_url:
     
     result_list.append(team_dict_out)
 
+# Man vs machine
+bot_result_list = []
+
+for item in Bot_Teams_dict_url:
+    print('Dowloading data for: ' + item)
+    bot_team_dict_out = {}
+    bot_stage_score_list = []
+    bot_team_dict_out['Name'] = item
+    
+    for n in range(0,Giro_N_stages):
+        print('Stage number: ' + str(n+1))
+        bot_stage_score_list.insert(n, \
+                                get_stage_score(BASE_URL, \
+                                                Bot_Teams_dict_url[item], n+1))
+    
+    bot_team_dict_out['Stage_Score'] = bot_stage_score_list
+    bot_team_dict_out['Cumulative_Score'] = np.cumsum(bot_stage_score_list).tolist()
+    bot_team_dict_out['Stage_N'] = list(range(1,Giro_N_stages+1))
+    
+    bot_result_list.append(bot_team_dict_out)
+
     
 # Column order
 col_order = ['Pip',
@@ -150,7 +177,15 @@ col_order = ['Pip',
              'Parag',
              'Klemen']
     
-
+bot_col_order = ['Bot - PCS Overall',
+                 'Bot - PCS Season',
+                 'Bot - PCS 2m form',
+                 'Random bot 1',
+                 'Random bot 2',
+                 'Random bot 3',
+                 'Klemen']
+                 
+             
 # Create outputs
 team_riders_df = pd.DataFrame(team_riders)
 team_riders_df = set_column_sequence(team_riders_df, col_order, front=True)
@@ -165,6 +200,19 @@ cum_scores = result_list_df['Cumulative_Score'].apply(pd.Series).transpose()
 cum_scores.columns = result_list_df['Name']
 cum_scores = set_column_sequence(cum_scores, col_order, front=True)
 
+
+bot_result_list_df = pd.DataFrame(bot_result_list)
+
+bot_stage_scores = bot_result_list_df['Stage_Score'].apply(pd.Series).transpose()
+bot_stage_scores.columns = bot_result_list_df['Name']
+bot_stage_scores = set_column_sequence(bot_stage_scores, bot_col_order, front=True)
+
+bot_cum_scores = bot_result_list_df['Cumulative_Score'].apply(pd.Series).transpose()
+bot_cum_scores.columns = bot_result_list_df['Name']
+bot_cum_scores = set_column_sequence(bot_cum_scores, bot_col_order, front=True)
+
+
+
 # Stage winners and overall leaders
 winners_df = pd.DataFrame()
 winners_df['Stage_N'] = list(range(1,Giro_N_stages+1))
@@ -173,6 +221,12 @@ winners_df['Stage_Score_Winner_Pts'] = stage_scores.max(axis=1)
 winners_df['Overall_Score_Leader'] = cum_scores.idxmax(axis=1)
 winners_df['Stage_Score_Leader_Pts'] = cum_scores.max(axis=1)
 
+bot_winners_df = pd.DataFrame()
+bot_winners_df['Stage_N'] = list(range(1,Giro_N_stages+1))
+bot_winners_df['Stage_Score_Winner'] = bot_stage_scores.idxmax(axis=1)
+bot_winners_df['Stage_Score_Winner_Pts'] = bot_stage_scores.max(axis=1)
+bot_winners_df['Overall_Score_Leader'] = bot_cum_scores.idxmax(axis=1)
+bot_winners_df['Stage_Score_Leader_Pts'] = bot_cum_scores.max(axis=1)
 
 # Save to csv file
 team_riders_df.to_csv('team_riders.csv')
@@ -203,6 +257,31 @@ plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('cum_scores.png', bbox_inches='tight')
+
+##########################
+# Bot plots
+
+# Individual stage score plot
+bot_stage_scores[0:Giro_last_stage].plot(linestyle='None', marker='o', grid=1)
+plt.xlim(-1,Giro_last_stage)
+plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
+plt.title('Giro 2017: Individual stage scores')
+plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
+plt.ylabel('Points')
+plt.xlabel('Stage')
+plt.savefig('bot_stage_scores.png', bbox_inches='tight')
+
+# Cumulative stage score plot
+bot_cum_scores[0:Giro_last_stage].plot(linestyle='-', marker='|', grid=1)
+plt.xlim(0,Giro_last_stage-1)
+plt.xticks(list(range(0,Giro_last_stage)), list(range(1,Giro_last_stage+1)))
+plt.title('Giro 2017: Cumulative scores')
+plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
+plt.ylabel('Points')
+plt.xlabel('Stage')
+plt.savefig('bot_cum_scores.png', bbox_inches='tight')
+
+
 
 ##########################
 # Analysis
