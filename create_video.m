@@ -11,7 +11,7 @@ imageNames = {imageNames.name}';
 
 
 
-outputVideo = VideoWriter(fullfile(workingDir,'PCS_Overall.avi'));
+outputVideo = VideoWriter(fullfile(workingDir,'PCS_Overall.mp4'), 'Archival');
 outputVideo.FrameRate = 1;
 open(outputVideo)
 
