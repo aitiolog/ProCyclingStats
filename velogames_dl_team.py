@@ -49,6 +49,7 @@ import re
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.stats as ss
 
 #####################################
 # FUNCTIONS
@@ -394,7 +395,41 @@ plt.savefig('cum_scores_PCS_Season_correlation.png', bbox_inches='tight')
 
 
 
+#####################
+# Fun statistics
 
+# Number of stage points wins
+stage_score_winners = winners_df['Stage_Score_Winner'].value_counts()
+overall_score_leaders = winners_df['Overall_Score_Leader'].value_counts()
+
+# Max stage points
+max_stage_points = {}
+max_stage_pts_index = winners_df['Stage_Score_Winner_Pts'].idxmax()
+max_stage_points['Name'] = \
+    winners_df['Stage_Score_Winner'][max_stage_pts_index]
+max_stage_points['Max_Pts'] = \
+    int(winners_df['Stage_Score_Winner_Pts'][max_stage_pts_index])
+max_stage_points['Stage'] = \
+    int(winners_df['Stage_N'][max_stage_pts_index])
+
+# Stage score statistics
+stage_scores_only = stage_scores[0:21] 
+stage_score_stats = pd.DataFrame()
+stage_score_stats['Mean'] = stage_scores_only.mean()
+stage_score_stats['Std'] = stage_scores_only.std()
+stage_score_stats['CV'] = ss.variation(stage_scores_only)
+
+# The most constant performance
+# --> lowest STD/CV of stage scores
+
+lowest_CV = stage_score_stats.loc[stage_score_stats['CV'].idxmin()]
+lowest_STD = stage_score_stats.loc[stage_score_stats['Std'].idxmin()]
+
+# Highest volatility
+# --> highest STD/CV of stage scores
+
+highest_CV = stage_score_stats.loc[stage_score_stats['CV'].idxmax()]
+highest_STD = stage_score_stats.loc[stage_score_stats['Std'].idxmax()]
 
 
 
