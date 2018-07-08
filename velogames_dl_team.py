@@ -13,31 +13,35 @@ Author: Klemen Ziberna
 #overall_url = "https://www.velogames.com/giro-ditalia/2017/teamroster.php?tid=590be698bbe75142"
 #stage_url = "https://www.velogames.com/giro-ditalia/2017/teamroster.php?tid=590be698bbe75142&ga=13&st=1"
 
-BASE_URL = "https://www.velogames.com/giro-ditalia/2017/teamroster.php"
+BASE_URL = "https://www.velogames.com/tour-de-france/2017/teamroster.php"
+
 Teams_dict_url = {
-                  'Klemen': 'tid=590be698bbe75142',
-                  'Toby': 'tid=590b0e844a4d1742',
-                  'Peter': 'tid=590c2b16e6eba921',
-                  'James': 'tid=590c35d156952570',
-                  'Parag': 'tid=590739ca1d1c8610',
-                  'Andy': 'tid=590c4b26d04bf397',
-                  'Pip': 'tid=590b9e73d6bf2899'
+                  'Klemen': 'tid=595791a64d5cc777',
+                  'Pip': 'tid=5956aeab738c2733',
+                  'Simon': 'tid=5956903f270ec458',
+                  'Andy': 'tid=5956ce75217cb253',
+                  'James': 'tid=594f7ee477e96144',
+                  'Pete': 'tid=59552b0e46832762',
+                  'Chris': 'tid=5957092dbb091231',
+                  'Parag': 'tid=5953ef20898f8367',
+                  'Toby': 'tid=59523f13f3409947'
                   }
 
 Bot_Teams_dict_url = {
-                  'Klemen': 'tid=590be698bbe75142',
-                  'Bot - PCS Overall': 'tid=590bdbcb1c295217',
-                  'Bot - PCS Season': 'tid=590bdf777e546805',
-                  'Bot - PCS 2m form': 'tid=590be122d14aa341',
-                  'Random bot 1': 'tid=590c0507ad029444',
-                  'Random bot 2': 'tid=590c06c5ded3f251',
-                  'Random bot 3': 'tid=590c08bc3c90a334'
+                  'Klemen': 'tid=595791a64d5cc777',
+                  'Klemen 2nd team': 'tid=5957970351477660',
+                  'Bot - PCS Overall': 'tid=595789193712f314',
+                  'Bot - PCS Season': 'tid=59578c2ee3edb408',
+                  'Bot - PCS 2m form': 'tid=59578e3aeb051285',
+                  'Random bot 1': 'tid=59579a75efa76904',
+                  'Random bot 2': 'tid=59579afb22bb6890',
+                  'Random bot 3': 'tid=59579b85604ac598'
                   }
 
                   
 # Stages
-Giro_N_stages = 21
-Giro_last_stage = 22          
+Tour_N_stages = 21
+Tour_last_stage = 22          
 
                   
 #####################################
@@ -143,7 +147,7 @@ for item in Bot_Teams_dict_url:
 
 # Download scores
 
-#Giro_N_stages = 21
+#Tour_N_stages = 21
 
 # Get scores for every team
 
@@ -156,7 +160,7 @@ for item in Teams_dict_url:
     team_dict_out['Name'] = item
     
     # Stage results
-    for n in range(0,Giro_N_stages):
+    for n in range(0,Tour_N_stages):
         print('Stage number: ' + str(n+1))
         stage_score_list.insert(n, \
                                 get_stage_score(BASE_URL, \
@@ -165,11 +169,11 @@ for item in Teams_dict_url:
     # End-of-tour score
     stage_score_list.append(get_end_tour_score(BASE_URL, \
                                                Teams_dict_url[item], \
-                                               Giro_N_stages))
+                                               Tour_N_stages))
         
     team_dict_out['Stage_Score'] = stage_score_list
     team_dict_out['Cumulative_Score'] = np.cumsum(stage_score_list).tolist()
-    team_dict_out['Stage_N'] = list(range(1,Giro_N_stages+1))
+    team_dict_out['Stage_N'] = list(range(1,Tour_N_stages+1))
     team_dict_out['Stage_N'].append('End')
     
     result_list.append(team_dict_out)
@@ -185,7 +189,7 @@ for item in Bot_Teams_dict_url:
     bot_team_dict_out['Name'] = item
     
     # Stage results
-    for n in range(0,Giro_N_stages):
+    for n in range(0,Tour_N_stages):
         print('Stage number: ' + str(n+1))
         bot_stage_score_list.insert(n, \
                                 get_stage_score(BASE_URL, \
@@ -194,11 +198,11 @@ for item in Bot_Teams_dict_url:
     # End-of-tour score
     bot_stage_score_list.append(get_end_tour_score(BASE_URL, \
                                                Bot_Teams_dict_url[item], \
-                                               Giro_N_stages))
+                                               Tour_N_stages))
     
     bot_team_dict_out['Stage_Score'] = bot_stage_score_list
     bot_team_dict_out['Cumulative_Score'] = np.cumsum(bot_stage_score_list).tolist()
-    bot_team_dict_out['Stage_N'] = list(range(1,Giro_N_stages+1))
+    bot_team_dict_out['Stage_N'] = list(range(1,Tour_N_stages+1))
     bot_team_dict_out['Stage_N'].append('End')
     
     bot_result_list.append(bot_team_dict_out)
@@ -206,9 +210,11 @@ for item in Bot_Teams_dict_url:
     
 # Column order
 col_order = ['Pip',
-             'James',
-             'Peter',
+             'Simon',
              'Andy',
+             'James',
+             'Pete',
+             'Chris',
              'Toby',
              'Parag',
              'Klemen']
@@ -219,6 +225,7 @@ bot_col_order = ['Bot - PCS Overall',
                  'Random bot 1',
                  'Random bot 2',
                  'Random bot 3',
+                 'Klemen 2nd team',
                  'Klemen']
                  
              
@@ -251,14 +258,14 @@ bot_cum_scores = set_column_sequence(bot_cum_scores, bot_col_order, front=True)
 
 # Stage winners and overall leaders
 winners_df = pd.DataFrame()
-winners_df['Stage_N'] = list(range(1,Giro_N_stages+1))
+winners_df['Stage_N'] = list(range(1,Tour_N_stages+1))
 winners_df['Stage_Score_Winner'] = stage_scores.idxmax(axis=1)
 winners_df['Stage_Score_Winner_Pts'] = stage_scores.max(axis=1)
 winners_df['Overall_Score_Leader'] = cum_scores.idxmax(axis=1)
 winners_df['Stage_Score_Leader_Pts'] = cum_scores.max(axis=1)
 
 bot_winners_df = pd.DataFrame()
-bot_winners_df['Stage_N'] = list(range(1,Giro_N_stages+1))
+bot_winners_df['Stage_N'] = list(range(1,Tour_N_stages+1))
 bot_winners_df['Stage_Score_Winner'] = bot_stage_scores.idxmax(axis=1)
 bot_winners_df['Stage_Score_Winner_Pts'] = bot_stage_scores.max(axis=1)
 bot_winners_df['Overall_Score_Leader'] = bot_cum_scores.idxmax(axis=1)
@@ -272,24 +279,37 @@ winners_df.to_csv('winners.csv')
 
 
 # Plot figures
-#Giro_last_stage = 22
-stage_labels = list(range(1, Giro_N_stages+1)) + ['End']
+
+# My colors
+# Quick gradient example along the Red/Green dimensions
+#my_colors = [(x/10.0, x/20.0, 0.75) for x in range(len(Teams_dict_url))]
+#my_bot_colors = [(x/10.0, x/20.0, 0.75) for x in range(len(Bot_Teams_dict_url))]
+# Specify this list of colors as the `color` option to `plot`.
+#df.plot(kind='bar', color=my_colors)
+
+# Or use colormaps
+# http://scipy.github.io/old-wiki/pages/Cookbook/Matplotlib/Show_colormaps
+
+#Tour_last_stage = 22
+stage_labels = list(range(1, Tour_N_stages+1)) + ['End']
 
 # Individual stage score plot
-stage_scores[0:Giro_last_stage].plot(linestyle='None', marker='o', grid=1)
-plt.xlim(-1,Giro_last_stage)
-plt.xticks(list(range(0,Giro_last_stage)), stage_labels)
-plt.title('Giro 2017: Individual stage scores')
+stage_scores[0:Tour_last_stage].plot(linestyle='None', marker='o', grid=1, \
+                                     colormap='Accent')
+plt.xlim(-1,Tour_last_stage)
+plt.xticks(list(range(0,Tour_last_stage)), stage_labels)
+plt.title('Tour 2017: Individual stage scores')
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('stage_scores.png', bbox_inches='tight')
 
 # Cumulative stage score plot
-cum_scores[0:Giro_last_stage].plot(linestyle='-', marker='|', grid=1)
-plt.xlim(0,Giro_last_stage-1)
-plt.xticks(list(range(0,Giro_last_stage)), stage_labels)
-plt.title('Giro 2017: Cumulative scores')
+cum_scores[0:Tour_last_stage].plot(linestyle='-', marker='|', grid=1, \
+                                   colormap='Accent')
+plt.xlim(0,Tour_last_stage-1)
+plt.xticks(list(range(0,Tour_last_stage)), stage_labels)
+plt.title('Tour 2017: Cumulative scores')
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
@@ -299,27 +319,30 @@ plt.savefig('cum_scores.png', bbox_inches='tight')
 # Bot plots
 
 # Individual stage score plot
-bot_stage_scores[0:Giro_last_stage].plot(linestyle='None', marker='o', grid=1)
-plt.xlim(-1,Giro_last_stage)
-plt.xticks(list(range(0,Giro_last_stage)), stage_labels)
-plt.title('Giro 2017: Individual stage scores')
+bot_stage_scores[0:Tour_last_stage].plot(linestyle='None', marker='o', grid=1, \
+                                         colormap='Accent')
+plt.xlim(-1,Tour_last_stage)
+plt.xticks(list(range(0,Tour_last_stage)), stage_labels)
+plt.title('Tour 2017: Individual stage scores')
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('bot_stage_scores.png', bbox_inches='tight')
 
 # Cumulative stage score plot
-bot_cum_scores[0:Giro_last_stage].plot(linestyle='-', marker='|', grid=1)
-plt.xlim(0,Giro_last_stage-1)
-plt.xticks(list(range(0,Giro_last_stage)), stage_labels)
-plt.title('Giro 2017: Cumulative scores')
+bot_cum_scores[0:Tour_last_stage].plot(linestyle='-', marker='|', grid=1, \
+                                        colormap='Accent')
+plt.xlim(0,Tour_last_stage-1)
+plt.xticks(list(range(0,Tour_last_stage)), stage_labels)
+plt.title('Tour 2017: Cumulative scores')
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left', ncol=1, numpoints=1)
 plt.ylabel('Points')
 plt.xlabel('Stage')
 plt.savefig('bot_cum_scores.png', bbox_inches='tight')
 
 
-
+#----------------------------------------------------------------------------#
+#----------------------------------------------------------------------------#
 ##########################
 # Analysis
 
@@ -334,7 +357,7 @@ team_PCS_scores['PCS_Season'] = [1994, 1966, 2169, 2424, 2678, 2478, 3706]
 
 figure1 = plt.figure(figsize=(21,8))
 
-for i in range(0,Giro_last_stage):
+for i in range(0,Tour_last_stage):
     print(i)
     plot = plt.subplot(4,6,i+1)
     x_data = team_PCS_scores['PCS_Overall'].tolist()
@@ -351,7 +374,7 @@ for i in range(0,Giro_last_stage):
     plot.locator_params(axis='y', nbins=5)
     plot.locator_params(axis='x', nbins=5)
     
-    plt.title('Giro 2017 - After Stage ' + str(i+1), fontsize=10)
+    plt.title('Tour 2017 - After Stage ' + str(i+1), fontsize=10)
     plt.ylabel('Velogames Points', fontsize=8)
     plt.xlabel('PCS Overall Points', fontsize=8)
     
@@ -366,7 +389,7 @@ plt.savefig('cum_scores_PCS_Overall_correlation.png', bbox_inches='tight')
 
 figure2 = plt.figure(figsize=(21,8))
 
-for i in range(0,Giro_last_stage):
+for i in range(0,Tour_last_stage):
     print(i)
     plot = plt.subplot(4,6,i+1)
     x_data = team_PCS_scores['PCS_Season'].tolist()
@@ -383,7 +406,7 @@ for i in range(0,Giro_last_stage):
     plot.locator_params(axis='y', nbins=5)
     #plot.locator_params(axis='x', nbins=4)
     
-    plt.title('Giro 2017 - After Stage ' + str(i+1), fontsize=10)
+    plt.title('Tour 2017 - After Stage ' + str(i+1), fontsize=10)
     plt.ylabel('Velogames Points', fontsize=8)
     plt.xlabel('PCS Season Points', fontsize=8)
     

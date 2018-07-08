@@ -98,6 +98,9 @@ Analysis_Tables/
 # Velogames
 Velogames/
 
+# Results
+Results/
+
 # Image
 *.png
 *.jpg

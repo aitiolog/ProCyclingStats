@@ -31,8 +31,8 @@ def pcs_rider_data(url_rider_id):
     # Load webpages
     
     # Interesting pages per rider
-    #url_overview = 'http://www.procyclingstats.com/rider/Christopher_Froome'
-    #url_statistics = 'http://www.procyclingstats.com/rider/Christopher_Froome_Statistics'
+    url_overview = 'https://www.procyclingstats.com/rider/christopher-froome/'
+    url_statistics = 'https://www.procyclingstats.com/rider/christopher-froome/statistics/overview'
     #url_running_pts_score = 'http://www.procyclingstats.com/rider.php?id=140869&c=3&code=riderstats-general-running-point-score'
     #url_rider_id = 'rider.php?id=140869'
     
@@ -42,7 +42,7 @@ def pcs_rider_data(url_rider_id):
     #url_statistics = base_url + 'rider/' + FirstName + '_' + LastName + '_Statistics'
     
     url_overview = base_url + url_rider_id
-    url_statistics = base_url + url_rider_id + '&c=3'
+    url_statistics = base_url + url_rider_id + '/statistics/overview'
     
     rider_main_page = requests.get(url_overview)
     rider_main_bs = \
@@ -109,28 +109,32 @@ def pcs_rider_data(url_rider_id):
         rider['Height'] = 'NaN'
     
     # Rider team
-    Year_find = rider_main_bs.findAll(string=re.compile('2017'))
+    Year_find = rider_main_bs.findAll(string=re.compile('2018'))
     try:
-        rider['Team2017'] = \
+        rider['Team2018'] = \
             str(Year_find[0].parent.next_sibling.next_sibling.string)
     except:
-        rider['Team2017'] = 'Error'
+        rider['Team2018'] = 'Error'
     
     # Points by speciality - One day races
     OneDayRaces_find = rider_main_bs.find_all(string=re.compile('One day races'))
-    rider['Overview_OneDayRaces'] = int(OneDayRaces_find[0].parent.previous_sibling.string)
+    rider['Overview_OneDayRaces'] = \
+            int(OneDayRaces_find[0].parent.parent.previous_sibling.string)
     
     # Points by speciality - GC
     GC_find = rider_main_bs.find_all(string=re.compile('GC'))
-    rider['Overview_GC'] = int(GC_find[0].parent.previous_sibling.string)
+    rider['Overview_GC'] = \
+            int(GC_find[0].parent.parent.previous_sibling.string)
     
     # Points by speciality - Time trial
     TimeTrial_find = rider_main_bs.find_all(string=re.compile('Time trial'))
-    rider['Overview_TimeTrial'] = int(TimeTrial_find[0].parent.previous_sibling.string)
+    rider['Overview_TimeTrial'] = \
+            int(TimeTrial_find[0].parent.parent.previous_sibling.string)
     
     # Points by speciality - Sprint
     Sprint_find = rider_main_bs.find_all(string=re.compile('Sprint'))
-    rider['Overview_Sprint'] = int(Sprint_find[0].parent.previous_sibling.string)
+    rider['Overview_Sprint'] = \
+            int(Sprint_find[0].parent.parent.previous_sibling.string)
     
     
     
@@ -204,12 +208,16 @@ def set_column_sequence(dataframe, seq, front=True):
 # MAIN PROGRAM
 
 # Obtain list of riders from startlist
-Giro2017_startlist_url = 'http://www.procyclingstats.com/race.php?id=171047&c=3&code=race-startlist'
-Giro2017_startlist_riders = pcs_startlist_all_riders(Giro2017_startlist_url)
+#Tour2017_startlist_url = 'http://www.procyclingstats.com/race.php?id=171088&c=3&code=race-startlist'
+#Tour2017_startlist_riders = pcs_startlist_all_riders(Tour2017_startlist_url)
+
+
+Tour2018_startlist_url = 'https://www.procyclingstats.com/race/tour-de-france/2018/startlist'
+Tour2018_startlist_riders = pcs_startlist_all_riders(Tour2018_startlist_url)
 
 
 # Obtain riders data
-input_startlist_riders = Giro2017_startlist_riders
+input_startlist_riders = Tour2018_startlist_riders
 
 All_riders_list = []
 counter = 1
@@ -229,7 +237,7 @@ All_riders_df = pd.DataFrame(All_riders_list)
 # Reorder the dataframe - those columns first
 col_order = ['Name',
              'Name_ASCII',
-             'Team2017',
+             'Team2018',
              'Age',
              'Nationality',
              'DOB',

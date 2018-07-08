@@ -8,7 +8,7 @@ Author: Klemen Ziberna
 #####################################
 # GLOBAL VARIABLES
 
-FILE_PATH = "C:\klemen\Repositories\ProCyclingStats\Analysis_Tables\Riders_Points"
+FILE_PATH = "C:\klemen\Repositories\ProCyclingStats\Analysis_Tables\Tour_2018\Riders_Points"
 CSV_FILES = ["rider1.csv",
              "rider2.csv",
              "rider3.csv",

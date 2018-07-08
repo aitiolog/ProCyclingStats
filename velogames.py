@@ -2,14 +2,16 @@
 """
 Velogames - rider selection algorithm
 
+Downloads cost points for every rider in the game (usually the first step)
+
 Author: Klemen Ziberna
 """
 
 #####################################
 # GLOBAL VARIABLES
 
-FILE_PATH = "insert_path"
-HTML_FILE = "Velogames Fantasy Cycling _ Fantasy Giro d Italia 2017.html"
+FILE_PATH = "C:\klemen\Repositories\ProCyclingStats\Velogames"
+HTML_FILE = "Velogames Fantasy Cycling _ Fantasy Tour de France 2017.html"
 
 
 

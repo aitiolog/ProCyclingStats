@@ -8,7 +8,7 @@ Author: Klemen Ziberna
 #####################################
 # GLOBAL VARIABLES
 
-FILE_PATH = "C:\klemen\Repositories\ProCyclingStats\Analysis_Tables\Riders_Points"
+FILE_PATH = "C:\klemen\Repositories\ProCyclingStats\Analysis_Tables\Tour_2018\Riders_Points"
 CSV_FILES = ["rider1.csv",
              "rider2.csv",
              "rider3.csv",
@@ -77,9 +77,10 @@ rider9_df = open_csv_chardet(os.path.join(FILE_PATH, CSV_FILES[8]))
 # Selection algorithm
 
 # Conditions
-sel_category = 'PCS Ranking - Individual - Value'
+#sel_category = 'PCS Ranking - Individual - Value'
 #sel_category = 'PCS Season - Individual - Value'
-#sel_category = 'Form_2month'
+sel_category = 'Form_2month'
+#sel_category = 'Form_3month'
 
 max_cost = 100 # max cost
 best_combination = {'Value':0,
